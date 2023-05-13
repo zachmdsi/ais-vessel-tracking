@@ -1,3 +1,9 @@
+import VesselTracker from "#/ui/vessel-tracker";
+
 export default function Home() {
-  return <></>;
+  return (
+    <div>
+      <VesselTracker />
+    </div>
+  );
 }
