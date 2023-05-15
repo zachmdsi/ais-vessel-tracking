@@ -20,22 +20,23 @@ export interface VesselData {
   TransceiverClass: string;
 }
 
-const useWebSocket = (url: string) => {
-  const [data, setData] = useState<VesselData | null>(null);
+const useWebSocket = (url: string, shouldConnect: boolean) => {
+  const [data, setData] = useState<VesselData[]>([]);
 
   useEffect(() => {
-    const ws = new WebSocket(url);
+    if (shouldConnect) {
+      const ws = new WebSocket(url);
 
-    ws.onmessage = (event) => {
-      const vesselData: VesselData = JSON.parse(event.data);
-      console.log(vesselData);
-      setData(vesselData);
-    };
+      ws.onmessage = (event) => {
+        const newVessel = JSON.parse(event.data);
+        setData((prevData) => [...prevData, newVessel]);
+      };
 
-    return () => {
-      ws.close();
-    };
-  }, [url]);
+      return () => {
+        ws.close();
+      };
+    }
+  }, [url, shouldConnect]);
 
   return data;
 };
